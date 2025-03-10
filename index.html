@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Servo Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            width: 300px;
+        }
+        #angleValue {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>ESP32 Servo Controller</h1>
+    <p>Adjust the slider to set the servo angle.</p>
+    
+    <input type="range" id="angleSlider" min="0" max="180" value="90">
+    <p>Angle: <span id="angleValue">90</span>°</p>
+    <hr>
+    <button onclick="highfive()">HIGH FIVE CHALLENGE</button>
+
+    <script>
+        const slider = document.getElementById("angleSlider");
+        const angleDisplay = document.getElementById("angleValue");
+
+        slider.addEventListener("input", () => {
+            let angle = slider.value;
+            angleDisplay.textContent = angle;
+
+            // Send request to Node.js server
+            fetch("/set-angle", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ angle: parseInt(angle) })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Success:", data))
+            .catch(error => console.error("Error:", error));
+        });
+
+        function highfive()
+        {
+            alert('HIGH FIVE CHALLENGE');
+        }
+    </script>
+</body>
+</html>
