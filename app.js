@@ -3,6 +3,7 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+const http = require("http");
 
 const app = express();
 const port = 3000;
@@ -13,7 +14,10 @@ app.use(bodyParser.json());
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, "public")));
 
-const wss = new WebSocket.Server({ port: 3500 });
+const server = http.createServer(app);
+
+// Attach WebSocket server to the same HTTPS server
+const wss = new WebSocket.Server({ server });
 
 let currentAngle = 90;
 
@@ -55,6 +59,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.listen(port, () => {
-    console.log(`Express server running on http://localhost:${port}`);
+server.listen(3000, () => {
+    console.log(`Server listening on port ${port}`);
 });
